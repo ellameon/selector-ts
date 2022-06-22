@@ -1,0 +1,28 @@
+.SelectorWidget {
+  text-align: center;
+}
+
+.closeSelector {
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+}
+
+.dropdown-menu {
+  display: block;
+  overflow: auto;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  min-width: 60px;
+  font-size: 14px;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+}
