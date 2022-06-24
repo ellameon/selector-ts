@@ -23,7 +23,7 @@ export const Selector = (function Selector(props: Props) {
   const {elementLeft, elementHeight, elementRight, onOpenSelector, elementBottom} = useDropDown()
   const display = open ? "unset" : "none"
   const width = String(elementRight - elementLeft)
-  const [currentChunk, setCurrentChunk] = useState(1)
+  const [currentChunk, setCurrentChunk] = useState(0)
   const refVisible = useRef<HTMLDivElement | null>(null)
   const refEntityTable = useRef<HTMLDivElement | null>(null)
 
