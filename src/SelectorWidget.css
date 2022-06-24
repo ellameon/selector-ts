@@ -12,12 +12,9 @@
 }
 
 .dropdown-menu {
-  display: block;
-  overflow: auto;
   top: 100%;
   left: 0;
   z-index: 1000;
-  min-width: 60px;
   font-size: 14px;
   background-color: #fff;
   background-clip: padding-box;
@@ -25,4 +22,8 @@
   border-radius: 4px;
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
   box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+}
+
+.dropdown-button {
+  z-index: 3000;
 }

@@ -1,15 +1,17 @@
 import { MouseEvent, useState } from "react"
 
 export function useDropDown(): {
-  buttonLeft: number
-  buttonHeight: number
-  buttonRight: number
+  elementLeft: number
+  elementHeight: number
+  elementRight: number
+  elementBottom: number
   onOpenSelector: (e: MouseEvent) => void
 } {
-  const [showDropDown, setShowDropDown] = useState(false)
-  const [buttonLeft, setButtonLeft] = useState(0)
-  const [buttonHeight, setButtonHeight] = useState(0)
-  const [buttonRight, setButtonRight] = useState(0)
+
+  const [elementLeft, setElementLeft] = useState(0)
+  const [elementHeight, setElementHeight] = useState(0)
+  const [elementRight, setElementRight] = useState(0)
+  const [elementBottom, setElementBottom] = useState(0)
 
   const onOpenSelector = (e: MouseEvent) => {
     if (e.target === null) {
@@ -19,16 +21,17 @@ export function useDropDown(): {
       return
     }
     const element = e.target.getBoundingClientRect()
-    setButtonLeft(element.x)
-    setButtonHeight(element.bottom - element.top)
-    setButtonRight(element.right)
-    setShowDropDown(!showDropDown)
+    setElementBottom(element.top)
+    setElementLeft(element.x)
+    setElementHeight(element.bottom - element.top)
+    setElementRight(element.right)
   }
 
   return {
-    buttonLeft: buttonLeft,
-    buttonHeight: buttonHeight,
-    buttonRight: buttonRight,
+    elementLeft: elementLeft,
+    elementHeight: elementHeight,
+    elementRight: elementRight,
+    elementBottom: elementBottom,
     onOpenSelector,
   }
 }
