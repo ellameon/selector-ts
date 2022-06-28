@@ -4,7 +4,7 @@ import {Selector} from "./Selector";
 import {EntityOption} from "./EntityOption";
 
 
-export  function SelectorWidget() {
+export function SelectorWidget() {
 
   const onSelect = useCallback(() => {
   }, [])
@@ -19,11 +19,14 @@ export  function SelectorWidget() {
   const limit = 30
   const [offset, setOffset] = useState(0)
   const beginValue = (offset === 0) ? 0 : (offset * limit - limit)
-  const fillEntityArray = async (offset: number) => {
+  const fillEntityArray = async (offset: number): Promise<void> => {
     entityArray = entityArray.concat(entities.slice(beginValue, (offset * limit + limit)))
   }
 
-  fillEntityArray(offset).then()
+  (async () => {
+    await fillEntityArray(offset)
+  })()
+
 
   return (
     <div className="SelectorWidget">
