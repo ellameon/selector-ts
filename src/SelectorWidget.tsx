@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import './SelectorWidget.css';
 import {Selector} from "./Selector";
 import {EntityOption} from "./EntityOption";
@@ -15,24 +15,19 @@ export function SelectorWidget() {
     entities.push(entity)
   }
 
-  let entityArray: Array<EntityOption> = []
-  const limit = 30
-  const [offset, setOffset] = useState(0)
-  const beginValue = (offset === 0) ? 0 : (offset * limit - limit)
-  const fillEntityArray = async (offset: number): Promise<void> => {
-    entityArray = entityArray.concat(entities.slice(beginValue, (offset * limit + limit)))
-  }
-
-  (async () => {
-    await fillEntityArray(offset)
-  })()
-
+  const getNewChunk = useCallback(async (offset: number, limit: number): Promise<Array<EntityOption>> => {
+    const beginValue = (offset === 0) ? 0 : (offset * limit - limit)
+    return entities.slice(beginValue, (offset * limit + limit))
+  }, [])
 
   return (
     <div className="SelectorWidget">
       <h1>Selector</h1>
-      <Selector onSelect={onSelect} entityArray={entityArray} buttonText={"selector for ts"}
-                setOffset={setOffset}/>
+      <Selector onSelect={onSelect} buttonText={"selector for ts"} limit={30} getNewChunk={getNewChunk}
+      />
+      <h1>Selector</h1>
+      <Selector onSelect={onSelect} buttonText={"selector for ts"} limit={30} getNewChunk={getNewChunk}
+      />
     </div>
   );
 }

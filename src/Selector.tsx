@@ -5,20 +5,21 @@ import {EntityOption} from "./EntityOption";
 import {SelectorRow} from "./SelectorRow";
 
 type Props = {
-  entityArray: Array<EntityOption>
   buttonText?: string
   onSelect: (id: number) => void
-  setOffset: (offset: number) => void
+  limit: number
+  getNewChunk: (offset: number, limit: number) => Promise<Array<EntityOption>>,
 }
 
 export const Selector = (function Selector(props: Props) {
   const {
-    entityArray,
     buttonText,
     onSelect,
-    setOffset,
+    getNewChunk,
+    limit,
   } = props
 
+  const [entityArray, setEntityArray] = useState<Array<EntityOption>>([])
   const [open, setOpen] = useState(false)
   const {elementLeft, elementHeight, elementRight, onOpenSelector, elementBottom} = useDropDown()
   const display = open ? "unset" : "none"
@@ -26,6 +27,15 @@ export const Selector = (function Selector(props: Props) {
   const [currentChunk, setCurrentChunk] = useState(0)
   const refVisible = useRef<HTMLDivElement | null>(null)
   const refEntityTable = useRef<HTMLDivElement | null>(null)
+
+  const fillEntityArray = useCallback(async (currentChunk: number) => {
+   const chunk = await getNewChunk(currentChunk, limit)
+    setEntityArray(chunk)
+  }, [currentChunk, limit])
+
+  useEffect(() =>{
+    void fillEntityArray(currentChunk)
+  }, [ fillEntityArray])
 
   useEffect(() => {
     function scrollHandler(e: Event) {
@@ -39,14 +49,12 @@ export const Selector = (function Selector(props: Props) {
       const position = scrolled + visibleHeight
       if (position >= height - 10) {
         setCurrentChunk(prevState => prevState + 1)
-        setOffset(currentChunk)
       }
       if (scrolled <= 10) {
         if (currentChunk <= 0) {
           return;
         }
         setCurrentChunk(prevState => prevState - 1)
-        setOffset(currentChunk)
       }
     }
 
@@ -100,7 +108,7 @@ export const Selector = (function Selector(props: Props) {
 
   return (
     <div>
-      <button type="button" ref={reference} onClick={selectorClick} className="dropdown-button" >
+      <button type="button" ref={reference} onClick={selectorClick} className="dropdown-button">
         {buttonText}
       </button>
       <div className="dropdown-menu"
@@ -110,14 +118,14 @@ export const Selector = (function Selector(props: Props) {
              left: elementLeft,
              position: strategy,
              display: display,
-             width: (Number(width) - 2) +  "px",
+             width: (Number(width) - 2) + "px",
              overflow: "auto",
              zIndex: 2000,
            }}
       >
         <div ref={refEntityTable}>
           {entityArray.map((entity) => (
-            <SelectorRow key={entity.element} entity={entity} onClose={() => setOpen(false)} onSelect={onSelect}/>
+            <SelectorRow key={entity.id} entity={entity} onClose={() => setOpen(false)} onSelect={onSelect}/>
           ))}
         </div>
       </div>
