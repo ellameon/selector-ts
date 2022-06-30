@@ -1,4 +1,4 @@
-export interface EntityOption {
-  element: number
+export interface EntityOption<T> {
+  element: T
   id: number
 }

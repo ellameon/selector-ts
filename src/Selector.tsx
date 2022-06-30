@@ -4,22 +4,24 @@ import {autoUpdate, offset, size, useFloating} from "@floating-ui/react-dom-inte
 import {EntityOption} from "./EntityOption";
 import {SelectorRow} from "./SelectorRow";
 
-type Props = {
+type Props<T> = {
   buttonText?: string
   onSelect: (id: number) => void
   limit: number
-  getNewChunk: (offset: number, limit: number) => Promise<Array<EntityOption>>,
+  valueToString: (value: T) => string
+  getNewChunk: (offset: number, limit: number) => Promise<Array<EntityOption<T>>>,
 }
 
-export const Selector = (function Selector(props: Props) {
+export const Selector = (function Selector<T>(props: Props<T>) {
   const {
     buttonText,
     onSelect,
     getNewChunk,
     limit,
+    valueToString,
   } = props
 
-  const [entityArray, setEntityArray] = useState<Array<EntityOption>>([])
+  const [entityArray, setEntityArray] = useState<Array<EntityOption<T>>>([])
   const [open, setOpen] = useState(false)
   const {elementLeft, elementHeight, elementRight, onOpenSelector, elementBottom} = useDropDown()
   const display = open ? "unset" : "none"
@@ -29,13 +31,13 @@ export const Selector = (function Selector(props: Props) {
   const refEntityTable = useRef<HTMLDivElement | null>(null)
 
   const fillEntityArray = useCallback(async (currentChunk: number) => {
-   const chunk = await getNewChunk(currentChunk, limit)
+    const chunk = await getNewChunk(currentChunk, limit)
     setEntityArray(chunk)
   }, [currentChunk, limit])
 
-  useEffect(() =>{
+  useEffect(() => {
     void fillEntityArray(currentChunk)
-  }, [ fillEntityArray])
+  }, [fillEntityArray])
 
   useEffect(() => {
     function scrollHandler(e: Event) {
@@ -125,7 +127,8 @@ export const Selector = (function Selector(props: Props) {
       >
         <div ref={refEntityTable}>
           {entityArray.map((entity) => (
-            <SelectorRow key={entity.id} entity={entity} onClose={() => setOpen(false)} onSelect={onSelect}/>
+            <SelectorRow key={entity.id} entity={entity} onClose={() => setOpen(false)} valueToString={valueToString}
+                         onSelect={onSelect}/>
           ))}
         </div>
       </div>
